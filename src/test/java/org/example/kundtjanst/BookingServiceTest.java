@@ -20,9 +20,17 @@ public class BookingServiceTest
     @Test
     void getBookingById()
     {
-        Long bookingId = 13L;
+        Long bookingId = 4L;
         boolean isAvailable = bookingServiceClient.isBookingAvailable(bookingId);
         assertTrue(isAvailable);
+    }
+
+    @Test
+    void isServiceUp()
+    {
+        boolean isUp = bookingServiceClient.isServiceUp();
+        System.out.println("Booking service är uppe: " + isUp);
+        assertTrue(isUp, "Booking service bör vara uppe för att köra detta test");
     }
 
     @Test

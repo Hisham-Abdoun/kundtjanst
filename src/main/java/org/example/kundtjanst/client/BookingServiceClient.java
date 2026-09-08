@@ -3,6 +3,7 @@ package org.example.kundtjanst.client;
 import org.example.kundtjanst.dto.CustomerDto;
 import org.example.kundtjanst.dto.BookingDto;
 import org.example.kundtjanst.dto.RoomDto;
+import org.example.kundtjanst.exception.BookingServiceUnavailableException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -42,7 +43,22 @@ public class BookingServiceClient {
             return false; // 404 → bokningen finns inte
 
         } catch (Exception e) {
-            throw new RuntimeException("Bokningsstjänst är inte tillgänglig");
+            throw new BookingServiceUnavailableException("Bokningsstjänst är inte tillgänglig", e);
+        }
+    }
+
+    /**
+     * Kontrollera om booking service är uppe.
+     */
+    public boolean isServiceUp() {
+        try {
+            restClient.get()
+                    .uri(bookingServiceUrl + "/api/bookings")
+                    .retrieve()
+                    .toEntity(String.class);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -67,7 +83,7 @@ public class BookingServiceClient {
         {
             System.out.println("Exception: " + e.getClass().getName() + " - " + e.getMessage());
             e.printStackTrace();
-            throw new RuntimeException("Bokningstjänst är inte tillgänglig", e);
+            throw new BookingServiceUnavailableException("Bokningstjänst är inte tillgänglig", e);
         }
     }
 }

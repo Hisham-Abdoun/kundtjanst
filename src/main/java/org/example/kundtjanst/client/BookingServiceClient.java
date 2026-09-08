@@ -86,4 +86,9 @@ public class BookingServiceClient {
             throw new BookingServiceUnavailableException("Bokningstjänst är inte tillgänglig", e);
         }
     }
+
+    // Rumhanteringar
+    /**
+     *
+     */
 }

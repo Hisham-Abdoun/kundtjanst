@@ -29,6 +29,10 @@ public class CustomerService {
     }
 
     public CustomerDto createCustomer(CustomerDto customerDto) {
+        // Kontrollera om e-post redan finns
+        if (customerRepository.existsByEmail(customerDto.getEmail())) {
+            throw new RuntimeException("E-postadressen är redan registrerad");
+        }
         Customer customer = toEntity(customerDto);
         Customer savedCustomer = customerRepository.save(customer);
         return toDto(savedCustomer);

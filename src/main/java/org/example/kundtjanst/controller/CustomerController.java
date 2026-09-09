@@ -2,6 +2,7 @@ package org.example.kundtjanst.controller;
 
 import org.example.kundtjanst.dto.CustomerDto;
 import org.example.kundtjanst.service.CustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,19 +39,34 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity<CustomerDto> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
-        CustomerDto createdCustomer = customerService.createCustomer(customerDto);
-        return ResponseEntity.ok(createdCustomer);
+        try {
+            CustomerDto createdCustomer = customerService.createCustomer(customerDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("E-postadressen är redan registrerad")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            }
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerDto customerDto) {
-        CustomerDto updatedCustomer = customerService.updateCustomer(id, customerDto);
-        return ResponseEntity.ok(updatedCustomer);
+        try {
+            CustomerDto updatedCustomer = customerService.updateCustomer(id, customerDto);
+            return ResponseEntity.ok(updatedCustomer);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
-        customerService.deleteCustomer(id);
-        return ResponseEntity.noContent().build();
+        try {
+            customerService.deleteCustomer(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

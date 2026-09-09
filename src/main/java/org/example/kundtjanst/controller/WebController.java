@@ -86,6 +86,18 @@ public class WebController {
     public String deleteCustomer(@PathVariable Long id,
                                 RedirectAttributes redirectAttributes) {
         try {
+            // Kontrollera om bokningstjänsten är tillgänglig
+            if (!bookingServiceClient.isServiceUp()) {
+                redirectAttributes.addFlashAttribute("error", "Kan inte ta bort kund - bokningstjänsten är inte tillgänglig.");
+                return "redirect:/customers";
+            }
+
+            // Kontrollera om kunden har aktiva bokningar
+            if (bookingServiceClient.hasActiveBookings(id)) {
+                redirectAttributes.addFlashAttribute("error", "Kan inte ta bort kund - kunden har aktiva bokningar.");
+                return "redirect:/customers";
+            }
+
             customerService.deleteCustomer(id);
             redirectAttributes.addFlashAttribute("success", "Kund borttagen!");
             return "redirect:/customers";

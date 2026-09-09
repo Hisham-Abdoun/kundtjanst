@@ -112,4 +112,17 @@ public class BookingServiceClient {
             throw new BookingServiceUnavailableException("Bokningstjänst är inte tillgänglig", e);
         }
     }
+
+    /**
+     * Kontrollera om en kund har aktiva bokningar.
+     */
+    public boolean hasActiveBookings(Long customerId) {
+        try {
+            List<BookingDto> allBookings = getAllBookings();
+            return allBookings.stream()
+                    .anyMatch(booking -> booking.getCustomerId() != null && booking.getCustomerId().equals(customerId));
+        } catch (Exception e) {
+            throw new BookingServiceUnavailableException("Kunde inte kontrollera bokningar för kund", e);
+        }
+    }
 }

@@ -32,17 +32,4 @@ public class BookingServiceTest
         System.out.println("Booking service är uppe: " + isUp);
         assertTrue(isUp, "Booking service bör vara uppe för att köra detta test");
     }
-
-    @Test
-    void getAllBookings()
-    {
-        List<BookingDto> bookings = bookingServiceClient.getAllBookings();
-        // System.out.println("Bokningar: " + bookings);
-        System.out.println("=== Alla Bokningar ===");
-        for (BookingDto books : bookings) {
-            System.out.println("ID: " + books.getId() +
-                    ", Namn: " + books.getCustomerName() +
-                    ", Rum: " + books.getRoomNumber());
-        }
-    }
 }

@@ -100,6 +100,11 @@ public class BookingServiceClient {
                     .retrieve()
                     .body(String.class);
         }
+        catch (HttpClientErrorException.Conflict e)
+        {
+            System.out.println("Conflict: " + e.getMessage());
+            throw new RuntimeException("Rummet är redan bokat för valda datum.", e);
+        }
         catch (HttpClientErrorException e)
         {
             System.out.println("HttpClientErrorException: " + e.getMessage());

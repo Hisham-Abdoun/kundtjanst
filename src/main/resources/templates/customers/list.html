@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kunder</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+
+    <h1>Kunder</h1>
+    <p class="text-muted">Hantera kunder i Kundtjänst</p>
+    <a href="/customers/new" class="btn btn-success">Ny kund</a>
+    <a href="/bookings" class="btn btn-secondary">Bokningar</a>
+    <a href="/rooms" class="btn btn-secondary">Rum</a>
+    <hr>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Förnamn</th>
+            <th>Efternamn</th>
+            <th>E-post</th>
+            <th>Telefon</th>
+            <th>Åtgärder</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="customer : ${customers}">
+            <td th:text="${customer.firstName}"></td>
+            <td th:text="${customer.lastName}"></td>
+            <td th:text="${customer.email}"></td>
+            <td th:text="${customer.phoneNumber}"></td>
+            <td>
+                <a th:href="@{/customers/edit/{id}(id=${customer.id})}"
+                   class="btn btn-warning btn-sm">Redigera</a>
+                <form th:action="@{/customers/delete/{id}(id=${customer.id})}"
+                      method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Är du säker?')">Ta bort</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

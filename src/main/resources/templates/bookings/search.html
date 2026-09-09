@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sök lediga rum</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+
+    <h1>Sök lediga rum</h1>
+    <a href="/bookings" class="btn btn-secondary">Tillbaka</a>
+    <hr>
+
+    <form action="/bookings/search" method="get">
+        <div class="mb-2">
+            <label>Startdatum</label>
+            <input type="date" name="startDate" class="form-control">
+        </div>
+        <div class="mb-2">
+            <label>Slutdatum</label>
+            <input type="date" name="endDate" class="form-control">
+        </div>
+        <div class="mb-2">
+            <label>Antal gäster</label>
+            <input type="number" name="numberOfGuests"
+                   class="form-control" min="1">
+        </div>
+        <button type="submit" class="btn btn-primary">Sök</button>
+    </form>
+
+    <div th:if="${availableRooms}">
+        <hr>
+        <h3>Lediga rum</h3>
+        <div th:if="${#lists.isEmpty(availableRooms)}"
+             class="alert alert-warning">
+            Inga lediga rum hittades
+        </div>
+        <table th:unless="${#lists.isEmpty(availableRooms)}"
+               class="table table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>Rumsnummer</th>
+                <th>Typ</th>
+                <th>Extra sängar</th>
+                <th>Pris per natt</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="room : ${availableRooms}">
+                <td th:text="${room.roomNumber}"></td>
+                <td th:text="${room.roomType}"></td>
+                <td th:text="${room.extraBeds}"></td>
+                <td th:text="${room.pricePerNight} + ' kr'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

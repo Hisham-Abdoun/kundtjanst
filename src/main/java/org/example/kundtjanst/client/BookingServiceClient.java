@@ -87,8 +87,29 @@ public class BookingServiceClient {
         }
     }
 
-    // Rumhanteringar
     /**
-     *
+     * Skapa ny bokning via booking service.
      */
+    public String saveBooking(BookingDto bookingDto) {
+        String fullUrl = bookingServiceUrl + "/api/bookings";
+        System.out.println("Creating booking at: " + fullUrl);
+        try {
+            return restClient.post()
+                    .uri(fullUrl)
+                    .body(bookingDto)
+                    .retrieve()
+                    .body(String.class);
+        }
+        catch (HttpClientErrorException e)
+        {
+            System.out.println("HttpClientErrorException: " + e.getMessage());
+            throw new RuntimeException("Kunde inte skapa bokning: " + e.getResponseBodyAsString(), e);
+        }
+        catch (Exception e)
+        {
+            System.out.println("Exception: " + e.getClass().getName() + " - " + e.getMessage());
+            e.printStackTrace();
+            throw new BookingServiceUnavailableException("Bokningstjänst är inte tillgänglig", e);
+        }
+    }
 }

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kundtjanst-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kundtjanst
+  template:
+    metadata:
+      labels:
+        app: kundtjanst
+    spec:
+      containers:
+        - name: kundtjanst
+          image: kundtjanst:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql-service:3306/kundtjanst
+            - name: SPRING_DATASOURCE_USERNAME
+              value: kundtjanst
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: mysql-password
+            - name: BOOKING_SERVICE_URL
+              value: http://booking-service:8080

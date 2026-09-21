@@ -23,7 +23,7 @@ public class CustomerService {
         this.bookingClient = bookingClient;
     }
 
-    // Konvertera Entity -> DTO
+
     private CustomerDto toDto(Customer customer) {
         CustomerDto dto = new CustomerDto();
         dto.setId(customer.getId());
@@ -34,7 +34,7 @@ public class CustomerService {
         return dto;
     }
 
-    // Konvertera DTO -> Entity
+
     private Customer toEntity(CustomerDto dto) {
         Customer customer = new Customer();
         customer.setFirstName(dto.getFirstName());
@@ -44,7 +44,7 @@ public class CustomerService {
         return customer;
     }
 
-    // Hämta alla kunder
+
     public List<CustomerDto> getAllCustomers() {
         return customerRepository.findAll()
                 .stream()
@@ -52,20 +52,20 @@ public class CustomerService {
                 .collect(Collectors.toList());
     }
 
-    // Hämta en kund via ID
+
     public CustomerDto getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
         return toDto(customer);
     }
 
-    // Registrera ny kund
+
     public CustomerDto saveCustomer(CustomerDto dto) {
         Customer saved = customerRepository.save(toEntity(dto));
         return toDto(saved);
     }
 
-    // Ändra en kunds uppgifter
+
     public CustomerDto updateCustomer(Long id, CustomerDto dto) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
@@ -79,8 +79,7 @@ public class CustomerService {
         return toDto(updated);
     }
 
-    // Ta bort en kund
-    // Frågar bokningstjänsten om kunden har bokningar innan kunden tas bort.
+
     public void deleteCustomer(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
